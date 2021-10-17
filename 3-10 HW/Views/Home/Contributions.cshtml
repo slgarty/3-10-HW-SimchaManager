@@ -1,0 +1,67 @@
+﻿@model SimchaViewModel
+
+
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+
+
+<h1>Contributions for @Model.Simcha.Name</h1>
+<div class="row mt-3">
+    <div class="container mt-5">
+        <div class="col-md-12">
+            <form method="POST" action="/home/updateContributions">
+            <table class="table table-hover table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Contribute</th>
+                        <th>Name</th>
+                        <th>Balance</th>
+                        <th>Always Include</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @{ int number = 0;}
+                    @foreach (Person person in Model.People)
+                    {
+                        <tr>
+                            <td>
+                                @if (Model.Funds.FirstOrDefault(f => f.ContributerId == person.Id && f.SimchaId == @Model.Simcha.Id)  != null)
+                                {
+                                    <input class="contribute" type="checkbox" name="person.AlwaysInclude" checked value="true" />
+                                }
+                                else
+                                {
+                                    <input class="contribute" type="checkbox" name="person.AlwaysInclude" value="true" />
+                                }
+                            </td>
+                            <td>@person.Name</td>
+                            <td>@person.Balance </td>
+                            <td><span class="@(person.AlwaysInclude? "oi oi-check" : "oi oi-x")"></span> </td>
+                            <td>
+
+                                @if (Model.Funds.FirstOrDefault(f => f.ContributerId == person.Id && f.SimchaId == @Model.Simcha.Id) != null)
+                                {
+                                    <input name="funds[@number].amount" placeholder="$0.00" value=" @(-1*Model.Funds.FirstOrDefault(f => f.ContributerId == person.Id && f.SimchaId == @Model.Simcha.Id).Amount)" />
+
+                                }
+                                else
+                                {
+                                    <input name="funds[@number].amount" placeholder="$0.00" />
+                                }
+                                <input name="funds[@number].simchaId" value="@Model.Simcha.Id" type="hidden" />
+                                <input name="funds[@number].date" value="@DateTime.Now" type="hidden" />
+                                <input name="funds[@number].contributerId" value="@person.Id" type="hidden" />
+
+                            </td>
+
+                        </tr>
+                        number++;
+                    }
+                </tbody>
+            </table>
+            <button class="btn-danger btn-lg btn-block">Update</button>
+            </form>
+        </div>
+    </div>
+</div>

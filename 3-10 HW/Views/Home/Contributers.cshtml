@@ -1,0 +1,126 @@
+﻿@model SimchaViewModel
+
+
+<h1>Contributers</h1>
+<div class="row">
+    <div class="col-md-3">
+        <button class="btn btn btn-danger" id="new-person">New Contributer</button>
+    </div>
+    <div class="col-md-5">
+        <input placeholder="search" />
+        <button class="btn-lg btn-sm">Clear</button>
+    </div>
+    <div class="col-md-4">
+        <h3>Total: $@Model.Total</h3>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="container mt-5">
+        <div class="col-md-12">
+            <table class="table table-hover table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Deposit</th>
+                        <th>Name</th>
+                        <th>Cell</th>
+                        <th>Balance</th>
+                        <th>Always Include</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Person person in Model.People)
+                    {
+                        <tr>
+                            <td>
+                            <button class="btn btn-success new-fund button" id="new-fund" data-name="@person.Name" data-contributer-id="@person.Id" date-fund-id="1">Deposit</button></td>
+                            <td>@person.Name</td>
+                            <td>@person.Cell</td>
+                            <td>@person.Balance</td>
+                            <td><span class='@(person.AlwaysInclude ? "oi oi-check": "oi oi-x")'></span></td>
+
+                            <td>
+
+                                <a href="/home/showhistory?personId=@person.Id" class=" btn-primary btn-lg "> Show History</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade add-person" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Contributer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/home/newContributer">
+                    <div class="form-group">
+                        <label>Contributer Name</label>
+                        <input class="form-control" name="name" placeholder="Name" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Cell Number</label>
+                        <input class="form-control" name="cell" placeholder="Cell" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Initial Deposit</label>
+                        <input class="form-control" name="amount" placeholder="Initial Deposit" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Date Created</label>
+                        <input type="date" name="date" class="form-control" id="datepicker">
+                    </div>
+                    <div class="form-group">
+                        <label>Always Include</label>
+                        <input type="checkbox" name="alwaysInclude" value="true" class="form-control">
+                    </div>
+                    <input type="hidden" id="1" name="simchaId" />
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" name="commit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade add-fund" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Deposit for <span id="person-name"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="/home/newFund">
+                <input type="hidden" name="contributerid"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input class="form-control" name="amount" placeholder="Deposit Amount" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" name="date" class="form-control" id="datepicker">
+                        <input value="1" name="simchaId" type="hidden">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <input class="btn btn-primary" name="commit" type="submit" value="Save">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
